@@ -15,13 +15,16 @@
 package com.example.mapwithmarker
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 /**
@@ -52,10 +55,26 @@ class MapsMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
           .position(sydney)
           .title("Marker in Sydney")
       )
+
+      googleMap.setOnMarkerClickListener {marker -> tapMarker(marker)}
+
       // [START_EXCLUDE silent]
       googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
       // [END_EXCLUDE]
     }
     // [END maps_marker_on_map_ready_add_marker]
+
+    private var isTappedMarker = false
+
+    private fun tapMarker(marker: Marker) : Boolean {
+        isTappedMarker = !isTappedMarker
+        Log.d("tapMarker()", "isTappedMarker=$isTappedMarker")
+        if (isTappedMarker) {
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+        } else {
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+        }
+        return true
+    }
 }
 // [END maps_marker_on_map_ready]
